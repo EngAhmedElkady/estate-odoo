@@ -1,0 +1,70 @@
+<odoo>
+    <!-- view -->
+    <record id="customer_contract_view" model="ir.ui.view">
+        <field name="name">customer contract view</field>
+        <field name="model">customer.contract</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="customer"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="price"/> 
+                <field name="average_price"/>
+                <field name="status" widget="statusbar"/>
+                <field name="last_change_status_by"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <record id="customer_contract_form" model="ir.ui.view">
+        <field name="name">customer contract view</field>
+        <field name="model">customer.contract</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <header>
+                        <field name="status" widget="statusbar" options="{'clickable':'1'}"/>
+                    </header>
+                    <group>
+                        <h1>
+                            <label for="customer"/>
+                            <field name="customer"/>
+                        </h1>
+                    </group>
+                    <group>
+
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                        </group>
+                        <group>
+                            <field name="price" class="oe_right"/> 
+                            <field name="average_price"/>
+                            <field name="last_change_status_by"/>
+
+                        </group>
+                        
+                    </group>
+                </sheet>
+            </form>
+        </field>
+
+    </record>
+
+    <!-- action -->
+    <record id="customer_contract_action" model="ir.actions.act_window">
+        <field name="name">customer contract</field>
+        <field name="res_model">customer.contract</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <!-- menu -->
+    <menuitem id="menu_customer" name="Customer"/>
+
+    <menuitem id="menu_contract" name="Contract"
+                parent="menu_customer"
+                action="customer_contract_action"/>
+
+</odoo>
