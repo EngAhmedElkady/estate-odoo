@@ -1,0 +1,66 @@
+name: Odoo CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - 'feature/*'
+      - 'develop'
+      - 'main'
+  pull_request:
+    branches:
+      - 'develop'
+      - 'main'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+
+    - name: Run unit tests
+      run: |
+        pytest
+
+    - name: Run integration tests
+      run: |
+        odoo-test-helper --integration
+
+    - name: Run functional tests
+      run: |
+        odoo-test-helper --functional
+
+    - name: Code quality checks
+      run: |
+        pylint ./odoo
+        flake8 ./odoo
+        mypy ./odoo
+
+    - name: Security checks
+      run: |
+        bandit -r ./odoo
+
+    - name: Deploy to staging (if tests pass)
+      if: ${{ success() }}
+      run: |
+        # Deploy to staging environment
+
+    - name: Notify tester
+      if: ${{ success() }}
+      run: |
+        echo "New version ready for testing in staging environment. Notify the tester."
+
+    - name: Deploy to production (if staging passes)
+      if: ${{ github.ref == 'refs/heads/main' && success() }}
+      run: |
+        # Deploy to production environment
